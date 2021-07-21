@@ -18,6 +18,20 @@ export const promedioAnioEstreno = () => {
 * @param {number} promedio
   */
 export const pelicuasConCriticaPromedioMayorA = (promedio) => {
+    var promedios=[];
+    var sumas = basededatos.peliculas.map(
+                        pel => basededatos.calificaciones.filter(
+                            cal => cal.pelicula==pel.id).reduce(
+                                (retro,item,itera) => ({id:item.pelicula,pelicula:pel.nombre,suma:retro.suma+item.puntuacion,cant:itera+1})
+                                ,{id:pel.id,pelicula:pel.nombre,suma:0,cant:1})
+                    );
+    promedios = sumas.map(p => ({id:p.id,nombre:p.pelicula,promedio:(p.suma/p.cant).toFixed(2)})).filter(p => p.promedio > promedio);
+    return promedios;
+};
+/** Solucion alternativa mas "tradicional" 
+ * 
+*/
+export const pelicuasConCriticaPromedioMayorA2 = (promedio) => {
     var promedios = [];
     var calificaciones = [];
     var peliculas = [];
@@ -37,7 +51,7 @@ export const pelicuasConCriticaPromedioMayorA = (promedio) => {
             promedios.push({id:pelicula.id,prom: (sum/cant).toFixed(2),pelicula:pelicula.nombre})
         }    
     });
-    return [promedios];
+    return promedios;
 };
 
 /**
